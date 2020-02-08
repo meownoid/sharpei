@@ -86,6 +86,21 @@ func (img *Image) Filename() string {
 	return C.GoString(img.vi.filename)
 }
 
+func (img *Image) MetaString(name string) string {
+	var out *C.char
+	C.vips_image_get_as_string(
+		img.vi,
+		C.CString(name),
+		&out,
+	)
+
+	return C.GoString(out)
+}
+
+func (img *Image) ICC() string {
+	return img.MetaString("icc-profile-data")
+}
+
 func Decode(r io.Reader) (*Image, error) {
 	buf, err := ioutil.ReadAll(r)
 	if err != nil {

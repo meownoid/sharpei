@@ -22,6 +22,11 @@ func main() {
 		log.Fatal(err)
 	}
 
+	log.Print(img.Filename())
+	log.Printf("(%v, %v) - (%v, %v)", img.XOffset(), img.YOffset(), img.XOffset()+img.Width(), img.YOffset()+img.Height())
+	log.Printf("%v band(s)", img.Bands())
+	log.Printf("ICC: %v", img.ICC())
+
 	f, err := os.Create("out.jpg")
 	if err != nil {
 		log.Fatal(err)
