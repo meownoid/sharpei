@@ -75,3 +75,67 @@ int tiffsave_buffer(
 		NULL
 	);
 }
+
+int resize(
+	VipsImage *in,
+	VipsImage **out,
+	double xscale,
+	double yscale
+) {
+	return vips_resize(
+		in,
+		out,
+		xscale,
+		"vscale", yscale,
+		NULL
+	);
+}
+
+int icc_import(
+	VipsImage *in,
+    VipsImage **out,
+	int intent
+) {
+	return vips_icc_import(
+		in,
+		out,
+		"intent", intent,
+		"embedded", TRUE,
+		"pcs", VIPS_PCS_LAB,
+		NULL
+	);
+}
+
+int icc_export(
+	VipsImage *in,
+    VipsImage **out,
+	int intent,
+	int depth
+) {
+	return vips_icc_export(
+		in,
+		out,
+		"intent", intent,
+		"depth", depth,
+		"pcs", VIPS_PCS_LAB,
+		NULL
+	);
+}
+
+int copy(
+	VipsImage *in,
+    VipsImage **out
+) {
+	return vips_copy(in, out, NULL);
+}
+
+int profile_load(
+	const char *name,
+    VipsBlob **profile
+) {
+	return vips_profile_load(
+		name,
+		profile,
+		NULL
+	);
+}

@@ -22,10 +22,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	log.Print(img.Filename())
-	log.Printf("(%v, %v) - (%v, %v)", img.XOffset(), img.YOffset(), img.XOffset()+img.Width(), img.YOffset()+img.Height())
-	log.Printf("%v band(s)", img.Bands())
-	log.Printf("ICC: %v", img.ICC())
+	transformedImg, err := TransformImage(img, TransfromConfig{Width: 2075})
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	f, err := os.Create("out.jpg")
 	if err != nil {
@@ -33,7 +33,7 @@ func main() {
 	}
 	defer f.Close()
 
-	err = img.EncodeJPEG(f, 95)
+	err = transformedImg.EncodeJPEG(f, 95)
 	if err != nil {
 		log.Fatal(err)
 	}
