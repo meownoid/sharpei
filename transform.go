@@ -3,7 +3,7 @@ package main
 import (
 	"strings"
 
-	"github.com/meownoid/s3-publisher/vips"
+	"github.com/meownoid/sharpei/vips"
 )
 
 var profileMapping = map[string]string{

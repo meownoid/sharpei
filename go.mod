@@ -1,3 +1,3 @@
-module github.com/meownoid/s3-publisher
+module github.com/meownoid/sharpei
 
 go 1.13

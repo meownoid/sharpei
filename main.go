@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/meownoid/s3-publisher/vips"
+	"github.com/meownoid/sharpei/vips"
 )
 
 func main() {
