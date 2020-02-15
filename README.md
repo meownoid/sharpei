@@ -2,7 +2,7 @@
 
 Sharpei is a tool for creating thumbnails and easy photo publishing built on top of the [vips](https://github.com/libvips/libvips) library.
 
-- Focuses on image quality
+- Focus on image quality
 - Fast
 - Easy and convinient command line interface
 - Aware of ICC profiles
@@ -10,7 +10,7 @@ Sharpei is a tool for creating thumbnails and easy photo publishing built on top
 
 ## Installation
 
-Vips library must be installed. On Mac OS you can install it via homebrew.
+Vips library must be installed. On Mac OS you can install it via homebrew:
 
 ```bash
 brew install vips
@@ -18,7 +18,7 @@ brew install vips
 
 For instructions for other platforms pleasse visit [vips homepage](https://github.com/libvips/libvips).
 
-Now, if you
+Now, if you have go toolchain installed:
 
 ```bash
 go install github.com/meownoid/sharpei
