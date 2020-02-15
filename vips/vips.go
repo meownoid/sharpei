@@ -335,6 +335,21 @@ func (img *Image) ICCExport(intent int, depth int) (*Image, error) {
 	return &Image{vi: out}, nil
 }
 
+func (img *Image) Autorot() (*Image, error) {
+	var out *C.VipsImage
+
+	status := C.autorot(
+		img.vi,
+		&out,
+	)
+
+	if status != 0 {
+		return nil, errors.New(getError("autorot"))
+	}
+
+	return &Image{vi: out}, nil
+}
+
 func LoadProfile(name string) ([]byte, error) {
 	var profileBlob *C.VipsBlob
 	status := C.profile_load(

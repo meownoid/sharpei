@@ -93,13 +93,21 @@ func TransformImage(img *vips.Image, cfg TransfromConfig) (*vips.Image, error) {
 	}
 	defer imgImported.Destroy()
 
+	// Autorotate
+	imgRotated, err := img.Autorot()
+	if err != nil {
+		imgRotated = imgImported
+	} else {
+		defer imgRotated.Destroy()
+	}
+
 	// Calculate scale
 	scalex := float64(cfg.Width) / float64(img.Width())
 	scaley := float64(cfg.Height) / float64(img.Height())
 	scale := math.Max(scalex, scaley)
 
 	// Resize image in the LAB PCS space
-	imgResized, err := imgImported.Resize(scale, scale)
+	imgResized, err := imgRotated.Resize(scale, scale)
 	if err != nil {
 		return nil, err
 	}

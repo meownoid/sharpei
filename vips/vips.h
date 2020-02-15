@@ -139,3 +139,10 @@ int profile_load(
 		NULL
 	);
 }
+
+int autorot(
+	VipsImage *in,
+	VipsImage **out
+) {
+	return vips_autorot(in, out, NULL);
+}
