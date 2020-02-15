@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+	"math"
 	"strings"
 
 	"github.com/meownoid/sharpei/vips"
@@ -42,11 +44,25 @@ func getProfile(name string) ([]byte, error) {
 
 type TransfromConfig struct {
 	Width         int
+	Height        int
 	InputProfile  string
 	OutputProfile string
 }
 
 func TransformImage(img *vips.Image, cfg TransfromConfig) (*vips.Image, error) {
+	// Check config
+	if cfg.Width < 0 {
+		cfg.Width = 0
+	}
+
+	if cfg.Height < 0 {
+		cfg.Height = 0
+	}
+
+	if cfg.Width == 0 && cfg.Height == 0 {
+		return nil, errors.New("either width or height should be greater than zero")
+	}
+
 	if cfg.InputProfile == "" {
 		switch img.Interpretation() {
 		case vips.INTERPRETATION_B_W, vips.INTERPRETATION_GREY16:
@@ -77,7 +93,10 @@ func TransformImage(img *vips.Image, cfg TransfromConfig) (*vips.Image, error) {
 	}
 	defer imgImported.Destroy()
 
-	scale := float64(cfg.Width) / float64(img.Width())
+	// Calculate scale
+	scalex := float64(cfg.Width) / float64(img.Width())
+	scaley := float64(cfg.Height) / float64(img.Height())
+	scale := math.Max(scalex, scaley)
 
 	// Resize image in the LAB PCS space
 	imgResized, err := imgImported.Resize(scale, scale)
