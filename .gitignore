@@ -1,3 +1,9 @@
+# binary
+sharpei
+
+# testing stuff
+test/
+
 # IDE
 .vscode/
 .idea/
