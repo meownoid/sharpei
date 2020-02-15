@@ -55,7 +55,7 @@ Sharpei includes 3 icc profiles appropriate for free distribution: `srgb-v2` (`s
 
 **But wait, there is more!**
 
-You can also create a config in the working directory (`sharpei.yml` or `.sharpei.yml`) or in the home directory (`~/.sharpei.yml`). Config makes more features available than cli.
+You can also create a config in the working directory (`sharpei.yml` or `.sharpei.yml`) or in the home directory (`~/.sharpei.yml`). There are more options available with the configuration file than in the command line interface.
 
 ### Example config
 ```yaml
