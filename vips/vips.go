@@ -150,6 +150,36 @@ func (img *Image) IsPropertySet(name string) bool {
 	return C.vips_image_get_typeof(img.vi, C.CString(name)) != 0
 }
 
+// Properties returns list of names of all properties of an image
+func (img *Image) Properties() []string {
+	fields := C.image_get_fields(img.vi)
+	defer C.g_strfreev(fields)
+
+	fieldsSlice := (*[1 << 31]*C.char)(unsafe.Pointer(fields))
+
+	result := make([]string, 0, 16)
+
+	for _, field := range fieldsSlice {
+		if field == nil {
+			break
+		}
+
+		result = append(result, C.GoString(field))
+	}
+
+	return result
+}
+
+func (img *Image) RemoveProperty(name string) error {
+	status := C.image_remove(img.vi, C.CString(name))
+
+	if status == 0 {
+		return fmt.Errorf("no metadata with name %s", name)
+	}
+
+	return nil
+}
+
 // PropertyString returns string value of the property with given name
 func (img *Image) PropertyString(name string) string {
 	var out *C.char

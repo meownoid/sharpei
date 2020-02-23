@@ -127,6 +127,13 @@ func TransformImage(img *vips.Image, cfg TransfromConfig) (*vips.Image, error) {
 	}
 	defer imgResizedCopy.Destroy()
 
+	// Remove EXIF metadata
+	for _, p := range imgResizedCopy.Properties() {
+		if strings.HasPrefix(p, "exif") {
+			imgResizedCopy.RemoveProperty(p)
+		}
+	}
+
 	// Load output profile and attach it to the image
 	outputProfile, err := getProfile(cfg.OutputProfile)
 	if err != nil {

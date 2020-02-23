@@ -146,3 +146,16 @@ int autorot(
 ) {
 	return vips_autorot(in, out, NULL);
 }
+
+gchar **image_get_fields(
+	VipsImage *image
+) {
+	return vips_image_get_fields(image);
+}
+
+int image_remove(
+	VipsImage *image,
+    const char *name
+) {
+	return (int)vips_image_remove(image, name);
+}
