@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/user"
@@ -128,16 +127,23 @@ func main() {
 		}
 
 		if stat.IsDir() {
-			files, err := ioutil.ReadDir(path)
+			err := filepath.Walk(path,
+				func(walkPath string, info os.FileInfo, err error) error {
+					if err != nil {
+						return err
+					}
+
+					if !info.IsDir() && isImage(info.Name()) {
+						pathsToProcess = append(pathsToProcess, walkPath)
+					}
+
+					return nil
+				})
+
 			if err != nil {
 				log.Fatal(err)
 			}
 
-			for _, file := range files {
-				if !file.IsDir() && isImage(file.Name()) {
-					pathsToProcess = append(pathsToProcess, filepath.Join(path, file.Name()))
-				}
-			}
 			continue
 		}
 
