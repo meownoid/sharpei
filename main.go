@@ -178,12 +178,33 @@ func main() {
 			}
 			defer img.Destroy()
 
+			// Autorotate
+			imgRotated, err := img.Autorot()
+			if err != nil {
+				imgRotated = img
+			} else {
+				defer imgRotated.Destroy()
+			}
+
+			imgRotatedCopy, err := imgRotated.Copy()
+			if err != nil {
+				fmt.Printf("%s: %s\n", inputPath, col.RedString(err.Error()))
+			}
+			defer imgRotatedCopy.Destroy()
+
+			// Remove EXIF metadata
+			for _, p := range imgRotatedCopy.Properties() {
+				if strings.HasPrefix(p, "exif") || strings.HasPrefix(p, "iptc") || strings.HasPrefix(p, "xmp") || p == "orientation" {
+					imgRotatedCopy.RemoveProperty(p)
+				}
+			}
+
 			basename := filepath.Base(inputPath)
 			name := strings.TrimSuffix(basename, filepath.Ext(basename))
 
 			for profileName, profile := range cfg.Profiles {
 				func(profileName string, profile ProfileConfig) {
-					out, err := processProfile(profile, img)
+					out, err := processProfile(profile, imgRotatedCopy)
 					if err != nil {
 						fmt.Printf("%s: error while processing profile %s: %s\n", inputPath, profileName, col.RedString(err.Error()))
 						return

@@ -63,6 +63,11 @@ func TransformImage(img *vips.Image, cfg TransfromConfig) (*vips.Image, error) {
 		return nil, errors.New("either width or height should be greater than zero")
 	}
 
+	// Calculate scale
+	scalex := float64(cfg.Width) / float64(img.Width())
+	scaley := float64(cfg.Height) / float64(img.Height())
+	scale := math.Max(scalex, scaley)
+
 	if cfg.InputProfile == "" {
 		switch img.Interpretation() {
 		case vips.INTERPRETATION_B_W, vips.INTERPRETATION_GREY16:
@@ -72,80 +77,71 @@ func TransformImage(img *vips.Image, cfg TransfromConfig) (*vips.Image, error) {
 		}
 	}
 
-	if cfg.OutputProfile == "" {
-		cfg.OutputProfile = cfg.InputProfile
-	}
+	isEmbeddedICC := img.IsPropertySet("icc-profile-data")
 
-	imgWithICCProfile := img
+	var imgExported *vips.Image
+	var err error
 
-	// If image has no attached profile, load default one and attach it to the image
-	if !img.IsPropertySet("icc-profile-data") {
-		inputProfile, err := getProfile(cfg.InputProfile)
+	if cfg.OutputProfile == "same" && isEmbeddedICC {
+		// Resize image in the original color space
+		imgExported, err = img.Resize(scale, scale)
 		if err != nil {
 			return nil, err
 		}
-
-		imgWithICCProfile, err = img.Copy()
-		if err != nil {
-			return nil, err
-		}
-		defer imgWithICCProfile.Destroy()
-
-		imgWithICCProfile.SetPropertyBlob("icc-profile-data", inputProfile)
-	}
-
-	// Import image to LAB PCS space using embedded profile with fallback to default profile
-	imgImported, err := imgWithICCProfile.ICCImport(vips.INTENT_RELATIVE)
-	if err != nil {
-		return nil, err
-	}
-	defer imgImported.Destroy()
-
-	// Autorotate
-	imgRotated, err := img.Autorot()
-	if err != nil {
-		imgRotated = imgImported
 	} else {
-		defer imgRotated.Destroy()
-	}
+		imgWithICCProfile := img
 
-	// Calculate scale
-	scalex := float64(cfg.Width) / float64(img.Width())
-	scaley := float64(cfg.Height) / float64(img.Height())
-	scale := math.Max(scalex, scaley)
+		// If image has no attached profile, load default one and embedd it into the image
+		if !isEmbeddedICC {
+			inputProfile, err := getProfile(cfg.InputProfile)
+			if err != nil {
+				return nil, err
+			}
 
-	// Resize image in the LAB PCS space
-	imgResized, err := imgRotated.Resize(scale, scale)
-	if err != nil {
-		return nil, err
-	}
-	defer imgResized.Destroy()
+			imgWithICCProfile, err = img.Copy()
+			if err != nil {
+				return nil, err
+			}
+			defer imgWithICCProfile.Destroy()
 
-	imgResizedCopy, err := imgResized.Copy()
-	if err != nil {
-		return nil, err
-	}
-	defer imgResizedCopy.Destroy()
-
-	// Remove EXIF metadata
-	for _, p := range imgResizedCopy.Properties() {
-		if strings.HasPrefix(p, "exif") {
-			imgResizedCopy.RemoveProperty(p)
+			imgWithICCProfile.SetPropertyBlob("icc-profile-data", inputProfile)
 		}
-	}
 
-	// Load output profile and attach it to the image
-	outputProfile, err := getProfile(cfg.OutputProfile)
-	if err != nil {
-		return nil, err
-	}
+		// Import image to LAB PCS space using embedded profile
+		imgImported, err := imgWithICCProfile.ICCImport(vips.INTENT_RELATIVE)
+		if err != nil {
+			return nil, err
+		}
+		defer imgImported.Destroy()
 
-	imgResizedCopy.SetPropertyBlob("icc-profile-data", outputProfile)
+		// Resize image in the LAB PCS space
+		imgResized, err := imgImported.Resize(scale, scale)
+		if err != nil {
+			return nil, err
+		}
+		defer imgResized.Destroy()
 
-	// Export image to WEB-optimized ICC profile
-	imgExported, err := imgResizedCopy.ICCExport(vips.INTENT_RELATIVE, 8)
-	if err != nil {
-		return nil, err
+		imgResizedCopy, err := imgResized.Copy()
+		if err != nil {
+			return nil, err
+		}
+		defer imgResizedCopy.Destroy()
+
+		// Load output profile and attach it to the image
+		if cfg.OutputProfile != "same" && cfg.OutputProfile != "" {
+			outputProfile, err := getProfile(cfg.OutputProfile)
+			if err != nil {
+				return nil, err
+			}
+
+			imgResizedCopy.SetPropertyBlob("icc-profile-data", outputProfile)
+		}
+
+		// Export image to output ICC profile
+		imgExported, err = imgResizedCopy.ICCExport(vips.INTENT_RELATIVE, 8)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	return imgExported, nil
