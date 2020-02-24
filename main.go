@@ -271,7 +271,7 @@ func main() {
 
 func isImage(filename string) bool {
 	switch strings.ToLower(filepath.Ext(filepath.Base(filename))) {
-	case ".jpeg", ".jpg", ".jpe", ".jif", ".jfif", ".jfi":
+	case "", ".jpeg", ".jpg", ".jpe", ".jif", ".jfif", ".jfi":
 		return true
 	case ".png":
 		return true
