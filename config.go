@@ -29,7 +29,7 @@ func loadConfig(filename string) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer r.Close()
+	defer func() { _ = r.Close() }()
 
 	content, err := ioutil.ReadAll(r)
 	if err != nil {

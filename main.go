@@ -17,7 +17,7 @@ import (
 )
 
 func usage() {
-	fmt.Fprintf(flag.CommandLine.Output(), "Usage: %s [OPTIONS] PATH [PATH] ...\n", os.Args[0])
+	_, _ = fmt.Fprintf(flag.CommandLine.Output(), "Usage: %s [OPTIONS] PATH [PATH] ...\n", os.Args[0])
 	flag.PrintDefaults()
 }
 
@@ -63,7 +63,7 @@ func main() {
 			Format:  *format,
 			Rewrite: *rewrite,
 			Profiles: map[string]ProfileConfig{
-				"thumbnail": ProfileConfig{
+				"thumbnail": {
 					Width:         *width,
 					Height:        *height,
 					InputProfile:  *inputProfile,
@@ -170,11 +170,12 @@ func main() {
 				fmt.Printf("%s: %s\n", inputPath, col.RedString(err.Error()))
 				return
 			}
-			defer reader.Close()
+			defer func() { _ = reader.Close() }()
 
 			img, err := vips.Decode(reader)
 			if err != nil {
 				fmt.Printf("%s: %s\n", inputPath, col.RedString(err.Error()))
+				return
 			}
 			defer img.Destroy()
 
@@ -189,13 +190,14 @@ func main() {
 			imgRotatedCopy, err := imgRotated.Copy()
 			if err != nil {
 				fmt.Printf("%s: %s\n", inputPath, col.RedString(err.Error()))
+				return
 			}
 			defer imgRotatedCopy.Destroy()
 
 			// Remove EXIF metadata
 			for _, p := range imgRotatedCopy.Properties() {
 				if strings.HasPrefix(p, "exif") || strings.HasPrefix(p, "iptc") || strings.HasPrefix(p, "xmp") || p == "orientation" {
-					imgRotatedCopy.RemoveProperty(p)
+					_ = imgRotatedCopy.RemoveProperty(p)
 				}
 			}
 
@@ -254,7 +256,7 @@ func main() {
 						fmt.Printf("%s: %s\n", outputPath, col.RedString(err.Error()))
 						return
 					}
-					defer f.Close()
+					defer func() { _ = f.Close() }()
 
 					_, err = out.buf.WriteTo(f)
 					if err != nil {
