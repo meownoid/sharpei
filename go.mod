@@ -1,10 +1,11 @@
 module github.com/meownoid/sharpei
 
-go 1.13
+go 1.14
 
 require (
 	github.com/fatih/color v1.9.0
-	github.com/meownoid/stempl v0.0.0-20200215212511-a9fa4c7cafc6
+	github.com/mattn/go-colorable v0.1.7 // indirect
+	github.com/meownoid/stempl v1.0.0
 	github.com/pkg/errors v0.9.1
-	gopkg.in/yaml.v2 v2.2.8
+	gopkg.in/yaml.v2 v2.3.0
 )
