@@ -68,7 +68,7 @@ func main() {
 					Height:        *height,
 					InputProfile:  *inputProfile,
 					OutputProfile: *outputProfile,
-					Type:          "jpg",
+					Type:          "same",
 				},
 			},
 		}
