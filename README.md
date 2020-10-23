@@ -1,6 +1,6 @@
 # Sharpei
 
-Sharpei is a command line tool for an easy image resizing and creating thumbnails 
+Sharpei is a command line tool for an easy image resizing and creating thumbnails
 built on top of the [vips](https://github.com/libvips/libvips) library.
 
 Key features:
@@ -25,7 +25,7 @@ On the Debian or Ubuntu you can install it via the apt:
 sudo apt install libvips libvips-dev
 ```
 
-For instructions for other platforms please visit 
+For instructions for other platforms please visit
 the [vips homepage](https://github.com/libvips/libvips).
 
 After that you can install the sharpei:
@@ -36,7 +36,7 @@ CGO_CFLAGS_ALLOW="-Xpreprocessor" go install github.com/meownoid/sharpei
 
 ## Usage
 
-For simple usage specify only one parameter `width`. 
+For simple usage specify only one parameter `width`.
 Image will be scaled proportionally to the specified width.
 
 ```shell script
@@ -45,7 +45,7 @@ sharpei -width 1024 image.jpg
 
 This command will create `image_thumbnail.jpg` in the same directory.
 
-For vertical images you can also specify height. Maximal dimension will be used. 
+For vertical images you can also specify height. Maximal dimension will be used.
 Horizontal images will be scaled to the specified width and vertical images
 will be scaled to the specified height.
 
@@ -82,11 +82,11 @@ Sharpei includes 3 ICC profiles appropriate for free distribution: `srgb-v2` (`s
 
 ## Configuration file
 
-You can also create a config in the working directory (`sharpei.yml` or `.sharpei.yml`) 
-or in the home directory (`~/.sharpei.yml`). There are more options available with 
-the configuration file.
+You can also create a config in the working directory (`sharpei.yml` or `.sharpei.yml`)
+or in the home directory (`~/.sharpei.yml`).
 
-For example, you can create different profiles and transform each image to 
+More options are available with the configuration file.
+For example, you can create different profiles and transform each image to
 multiple thumbnails with different sizes or ICC profiles.
 
 ### Example configuration
