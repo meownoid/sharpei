@@ -1,48 +1,61 @@
 # Sharpei
 
-Sharpei is a tool for creating thumbnails and easy photo publishing built on top of the [vips](https://github.com/libvips/libvips) library.
+Sharpei is a command line tool for creating thumbnails and easy photo 
+publishing built on top of the [vips](https://github.com/libvips/libvips) library.
 
-- Focus on image quality
-- Fast
-- Easy and convinient command line interface
-- Aware of ICC profiles
-- Aware of gray images
+Key features:
+
+- focuses on image quality;
+- fast;
+- provides easy and convenient command line interface;
+- aware of ICC profiles;
+- aware of grayscale images.
 
 ## Installation
 
-Vips library must be installed. On Mac OS you can install it via homebrew:
+Vips library must be installed first. On the macOS you can install it via the homebrew:
 
-```bash
+```shell script
 brew install vips
 ```
 
-For instructions for other platforms pleasse visit [vips homepage](https://github.com/libvips/libvips).
+On the Debian or Ubuntu you can install it via the apt:
 
-Now, if you have go toolchain installed:
+```shell script
+sudo apt install libvips libvips-dev
+```
 
-```bash
+For instructions for other platforms please visit 
+the [vips homepage](https://github.com/libvips/libvips).
+
+After that you can install the sharpei:
+
+```shell script
 go install github.com/meownoid/sharpei
 ```
 
 ## Usage
 
-Simple usage:
+For simple usage specify only one parameter `width`. 
+Image will be scaled proportionally to the specified width.
 
-```bash
+```shell script
 sharpei -width 1024 image.jpg
 ```
 
 This command will create `image_thumbnail.jpg` in the same directory.
 
-For vertical images you can also specify height:
+For vertical images you can also specify height. Maximal dimension will be used. 
+Horizontal images will be scaled to the specified width and vertical images
+will be scaled to the specified height.
 
-```bash
+```shell script
 sharpei -width 1024 -height 512 image.jpg
 ```
 
-And ICC profiles:
+You can also specify input and output ICC profiles.
 
-```bash
+```shell script
 sharpei \
     -width 1024 \
     -height 512 \
@@ -51,13 +64,33 @@ sharpei \
     image.jpeg
 ```
 
-Sharpei includes 3 icc profiles appropriate for free distribution: `srgb-v2` (`srgb`), `srgb-v4`, `gray`.
+Sharpei includes 3 ICC profiles appropriate for free distribution: `srgb-v2` (`srgb`), `srgb-v4`, `gray`.
+
+## Command line arguments
+
+* `-config` – path to the config
+* `-output` – output directory
+* `-format` – format of the output file name (for example: `{name}_transformed`)
+* `-rewrite` – use it to rewrite existing files
+* `-width` – image width
+* `-height` – image height
+* `-input-profile` – input ICC profile (name or path)
+* `-output-profile` – output ICC profile (name or path)
+* `-no-color` – disable colorized terminal output
 
 **But wait, there is more!**
 
-You can also create a config in the working directory (`sharpei.yml` or `.sharpei.yml`) or in the home directory (`~/.sharpei.yml`). There are more options available with the configuration file than in the command line interface.
+## Configuration file
 
-### Example config
+You can also create a config in the working directory (`sharpei.yml` or `.sharpei.yml`) 
+or in the home directory (`~/.sharpei.yml`). There are more options available with 
+the configuration file.
+
+For example, you can create different profiles and transform each image to 
+multiple thumbnails with different sizes or ICC profiles.
+
+### Example configuration
+
 ```yaml
 output: 'images/'
 format: '{name}_{profile}'
