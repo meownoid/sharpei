@@ -31,7 +31,7 @@ the [vips homepage](https://github.com/libvips/libvips).
 After that you can install the sharpei:
 
 ```shell script
-go install github.com/meownoid/sharpei
+CGO_CFLAGS_ALLOW="-Xpreprocessor" go install github.com/meownoid/sharpei
 ```
 
 ## Usage
