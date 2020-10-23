@@ -1,5 +1,7 @@
 # Sharpei
 
+[![asciicast](https://asciinema.org/a/367362.svg)](https://asciinema.org/a/367362)
+
 Sharpei is a command line tool for an easy image resizing and creating thumbnails
 built on top of the [vips](https://github.com/libvips/libvips) library.
 
