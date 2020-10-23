@@ -289,7 +289,7 @@ func isImage(filename string) bool {
 func processProfile(profile ProfileConfig, img *vips.Image) (*outputFile, error) {
 	transformedImg, err := TransformImage(
 		img,
-		TransfromConfig{
+		TransformConfig{
 			Width:         profile.Width,
 			Height:        profile.Height,
 			InputProfile:  profile.InputProfile,

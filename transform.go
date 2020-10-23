@@ -42,14 +42,14 @@ func getProfile(name string) ([]byte, error) {
 	return profile, nil
 }
 
-type TransfromConfig struct {
+type TransformConfig struct {
 	Width         int
 	Height        int
 	InputProfile  string
 	OutputProfile string
 }
 
-func TransformImage(img *vips.Image, cfg TransfromConfig) (*vips.Image, error) {
+func TransformImage(img *vips.Image, cfg TransformConfig) (*vips.Image, error) {
 	if cfg.Width < 0 {
 		cfg.Width = 0
 	}
