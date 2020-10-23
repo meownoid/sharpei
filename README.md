@@ -75,7 +75,7 @@ Sharpei includes 3 ICC profiles appropriate for free distribution: `srgb-v2` (`s
 * `-width` – image width
 * `-height` – image height
 * `-input-profile` – input ICC profile (name or path)
-* `-output-profile` – output ICC profile (name or path)
+* `-output-profile` – output ICC profile (name or path), special value `same` means same as input
 * `-no-color` – disable colorized terminal output
 
 **But wait, there is more!**
