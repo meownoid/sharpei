@@ -111,7 +111,16 @@ func main() {
 	}
 
 	if cfg == nil {
-		log.Fatal("no config found, use cli arguments, config flag, sharpei.yml or ~/.sharpei.yml")
+		log.Fatal("no config found, searched at: sharpei.yml, .sharpei.yml, ~/.sharpei.yml")
+	}
+
+	// Default values
+	if cfg.Output == "" {
+		cfg.Output = "."
+	}
+
+	if cfg.Format == "" {
+		cfg.Format = "{name}_{profile}"
 	}
 
 	pathsToProcess := make([]string, 0, flag.NArg())
@@ -202,10 +211,15 @@ func main() {
 			}
 
 			basename := filepath.Base(inputPath)
-			name := strings.TrimSuffix(basename, filepath.Ext(basename))
+			ext := filepath.Ext(basename)
+			name := strings.TrimSuffix(basename, ext)
 
 			for profileName, profile := range cfg.Profiles {
 				func(profileName string, profile ProfileConfig) {
+					if profile.Type == "" || profile.Type == "same" {
+						profile.Type = strings.TrimPrefix(ext, ".")
+					}
+
 					out, err := processProfile(profile, imgRotatedCopy)
 					if err != nil {
 						fmt.Printf("%s: error while processing profile %s: %s\n", inputPath, profileName, col.RedString(err.Error()))
