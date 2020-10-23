@@ -91,7 +91,7 @@ func TransformImage(img *vips.Image, cfg TransformConfig) (*vips.Image, error) {
 	imgWithICCProfile := img
 	profileAttached := ""
 
-	// If image has no attached profile, load default one and embedd it into the image
+	// If image has no attached profile, load the default one and embed it into the image
 	if !isEmbeddedICC {
 		profileAttached = cfg.InputProfile
 
@@ -109,7 +109,7 @@ func TransformImage(img *vips.Image, cfg TransformConfig) (*vips.Image, error) {
 		imgWithICCProfile.SetPropertyBlob("icc-profile-data", inputProfile)
 	}
 
-	// Import image to LAB PCS space using embedded profile
+	// Import image to the LAB PCS space using embedded profile
 	imgImported, err := imgWithICCProfile.ICCImport(vips.INTENT_RELATIVE)
 	if err != nil {
 		return nil, err
@@ -148,7 +148,7 @@ func TransformImage(img *vips.Image, cfg TransformConfig) (*vips.Image, error) {
 		imgResizedCopy.SetPropertyBlob("icc-profile-data", outputProfile)
 	}
 
-	// Export image to output ICC profile
+	// Export image to the output ICC profile
 	imgExported, err := imgResizedCopy.ICCExport(vips.INTENT_RELATIVE, 8)
 	if err != nil {
 		return nil, err
