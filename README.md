@@ -1,7 +1,7 @@
 # Sharpei
 
-Sharpei is a command line tool for creating thumbnails and easy photo 
-publishing built on top of the [vips](https://github.com/libvips/libvips) library.
+Sharpei is a command line tool for an easy image resizing and creating thumbnails 
+built on top of the [vips](https://github.com/libvips/libvips) library.
 
 Key features:
 
