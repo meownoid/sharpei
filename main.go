@@ -46,11 +46,6 @@ func main() {
 
 	flag.Parse()
 
-	if flag.NArg() == 0 {
-		flag.Usage()
-		os.Exit(1)
-	}
-
 	if *noColor {
 		col.NoColor = true
 	}
